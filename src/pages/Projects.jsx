@@ -1,5 +1,41 @@
 import styled from "styled-components";
 import NoteItem from "../components/NoteItem";
+import { useEffect, useState } from "react";
+
+import { getNotesByAuthorId } from "../api/supabaseApi";
+
+
+const Projects = () => {
+  const [notes, setNotes] = useState([]);
+
+  //실험용 id
+  const authorId = 11110000;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getNotesByAuthorId(authorId);
+      setNotes(data);
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <StProjects>
+      {
+        (notes.length > 0) ?
+          (
+            notes.map((noteData) => {
+              const { id } = noteData;
+              return <NoteItem key={id} configData={noteData} redirectTo={'note-versions'} />
+            })
+          ) : (
+            <div>진행중인 프로젝트가 없습니다</div>
+          )
+      }
+    </StProjects>
+  );
+};
 
 const StProjects = styled.div`
   display: flex;
@@ -8,30 +44,5 @@ const StProjects = styled.div`
   justify-content: center;
   gap: 30px;
 `;
-
-const StProjectsWrapper = styled.main`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100vh;
-`;
-
-const Projects = () => {
-  const projectItemList = [
-    { id: "1", title: "Title 1" },
-    { id: "2", title: "Title 2" },
-    { id: "3", title: "Title 3" },
-  ];
-  return (
-    <StProjectsWrapper>
-      <StProjects>
-        {projectItemList.map(({ id, title }) => (
-          <NoteItem key={id} title={title} />
-        ))}
-      </StProjects>
-    </StProjectsWrapper>
-  );
-};
 
 export default Projects;

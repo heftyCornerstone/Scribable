@@ -19,7 +19,7 @@ const router = createBrowserRouter([
                 element: <Projects />,
             },
             {
-                path: '/read-note',
+                path: '/read-note/:versionId',
                 element: <ReadNote />,
             },
             {
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
                 element: <WriteNote />,
             },
             {
-                path: '/note-versions',
+                path: '/note-versions/:noteId',
                 element: <NoteVersions />,
             }
         ]

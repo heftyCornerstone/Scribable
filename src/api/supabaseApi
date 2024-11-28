@@ -1,0 +1,32 @@
+import supabase from "../supabaseClient";
+
+
+export const getNoteVersions = async (noteId, isMain = false) => {
+    try {
+        const { data, error } = await supabase.from("versions").select().eq('note_id', noteId).eq('is_main', isMain);
+        if (error) console.error(error);
+        return data
+    } catch (error) {
+        return null
+    }
+}
+
+export const getVersionById = async (versionId) => {
+    try {
+        const { data, error } = await supabase.from("versions").select().eq("id", versionId);
+        if (error) console.error(error);
+        return data[0]
+    } catch (error) {
+        return null
+    }
+}
+
+export const getNotesByAuthorId = async (authorId) => {
+    try{
+        const { data, error } = await supabase.from("notes").select().eq('author', authorId);
+        if (error) console.error(error);
+        return data
+    } catch (error) {
+        return null
+    }
+}
