@@ -27,15 +27,15 @@ const ReadNote = () => {
   }, []);
 
   return (
-    <NoteSheet>
+    <StNoteSheet>
       <NoteContentsBox>
         {note ? <ReadNoteContent noteContent={note} /> : <div>로딩중</div>}
       </NoteContentsBox>
-    </NoteSheet>
+    </StNoteSheet>
   );
 };
 
-const NoteSheet = styled.div`
+const StNoteSheet = styled.div`
   width: 70%;
   min-height: 85vh;
   border: 1px solid gray;

@@ -1,11 +1,11 @@
-import router from "./shared/router"
+import routes from "./routes/routes"
 import { RouterProvider } from "react-router-dom"
 
 function App() {
 
   return (
     <>
-      <RouterProvider router={router}/>
+      <RouterProvider router={routes}/>
     </>
   )
 }
