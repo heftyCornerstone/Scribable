@@ -63,6 +63,16 @@ export const createNewVersion = async ({ articleTitle, content, noteId, authorId
     }
 }
 
+export const updateVersion = async ({ articleTitle, content, versionId })=>{   
+    const { error } = await supabase
+        .from('versions')
+        .update({ article_title: articleTitle, content })
+        .eq('id', versionId);
+    if (error) {
+        throw error;
+    }
+}
+
 export const deleteNote = async (noteId) => {
     try {
         await supabase

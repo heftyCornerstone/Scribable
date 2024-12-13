@@ -5,6 +5,7 @@ import ReadNote from "../pages/ReadNote";
 import WriteNote from "../pages/WriteNote";
 import NoteVersions from "../pages/NoteVersions";
 import Layout from "../components/Layout";
+import UpdateNote from "../pages/updateNote";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
             {
                 path: '/read-note/:versionId',
                 element: <ReadNote />,
+            },
+            {
+                path: '/update-note/:versionId',
+                element: <UpdateNote/>,
             },
             {
                 path: '/write/:writeMode',

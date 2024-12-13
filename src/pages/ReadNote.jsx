@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { getVersionById } from "../api/supabaseApi";
 
 const ReadNoteContent = ({ noteContent }) => {
-  const { article_title: articleTitle, content } = noteContent;
+  const navigate = useNavigate();
+  const { article_title: articleTitle, content, id } = noteContent;
+  const handleUpdate = ()=>{
+    navigate(`/update-note/${id}`, { state: noteContent });
+  }
   return (
     <>
       <NoteTitle>{articleTitle}</NoteTitle>
       <NoteContent>{content}</NoteContent>
+      <button onClick={handleUpdate}>수정하기</button>
     </>
   );
 };
