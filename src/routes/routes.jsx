@@ -23,7 +23,7 @@ const router = createBrowserRouter([
                 element: <ReadNote />,
             },
             {
-                path: '/write-note',
+                path: '/write/:writeMode',
                 element: <WriteNote />,
             },
             {

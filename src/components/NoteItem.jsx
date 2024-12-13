@@ -1,22 +1,37 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { deleteNote, deleteVersion } from "../api/supabaseApi";
 
 
-const NoteItem = ({ configData, redirectTo }) => {
-
+const NoteItem = ({ configData, mode, isRemovable }) => {
     const navigate = useNavigate();
+
+    const itemMode = {
+        note: { redirectTo: 'note-versions', deleteFn: deleteNote, btnValue: 'V' },
+        version: { redirectTo: 'read-note', deleteFn: deleteVersion, btnValue: 'R' }
+    }
+    const { redirectTo, deleteFn, btnValue } = itemMode[mode];
     const { id, title } = configData;
-    const handleOnclick = () => {
-        navigate(`/${redirectTo}/${id}`);//이거 버전에서 보는가, 프로젝트에서 보는가에 따라서 내비게이트 되는 곳이 달라야 함.
+
+    const handleRead = () => {
+        navigate(`/${redirectTo}/${id}`);
+    }
+    const handleDelete = async () => {
+        try {
+            await deleteFn(id);
+        } catch (error) {
+            window.alert(error);
+        }
     }
 
+
     return (
-        <div onClick={handleOnclick}>
+        <div >
             <StNoteItem>
                 <div>{title}</div>
                 <div>
-                    <button>X</button>
-                    <button>V</button>
+                    <button onClick={handleRead}>{btnValue}</button>
+                    {isRemovable && <button onClick={handleDelete}>X</button>}
                 </div>
             </StNoteItem>
         </div>

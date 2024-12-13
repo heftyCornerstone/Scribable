@@ -9,8 +9,9 @@ const Projects = () => {
   const [notes, setNotes] = useState([]);
 
   //실험용 id
-  const authorId = 11110000;
+  const authorId = "6cc87571-a147-400b-b663-89fc628f3931";
 
+  //tanstack query를 적용해서 바꿔보자
   useEffect(() => {
     const fetchData = async () => {
       const data = await getNotesByAuthorId(authorId);
@@ -27,7 +28,7 @@ const Projects = () => {
           (
             notes.map((noteData) => {
               const { id } = noteData;
-              return <NoteItem key={id} configData={noteData} redirectTo={'note-versions'} />
+              return <NoteItem key={id} configData={noteData} mode={'note'} isRemovable={true} />
             })
           ) : (
             <div>진행중인 프로젝트가 없습니다</div>

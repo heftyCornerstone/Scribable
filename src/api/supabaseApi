@@ -3,8 +3,12 @@ import supabase from "../supabaseClient";
 
 export const getNoteVersions = async (noteId, isMain = false) => {
     try {
-        const { data, error } = await supabase.from("versions").select().eq('note_id', noteId).eq('is_main', isMain);
-        if (error) console.error(error);
+        const { data, error } = await supabase
+            .from("versions")
+            .select()
+            .eq('note_id', noteId)
+            .eq('is_main', isMain);
+        if (error) throw (error);
         return data
     } catch (error) {
         return null
@@ -13,8 +17,11 @@ export const getNoteVersions = async (noteId, isMain = false) => {
 
 export const getVersionById = async (versionId) => {
     try {
-        const { data, error } = await supabase.from("versions").select().eq("id", versionId);
-        if (error) console.error(error);
+        const { data, error } = await supabase
+            .from("versions")
+            .select()
+            .eq("id", versionId);
+        if (error) throw (error);
         return data[0]
     } catch (error) {
         return null
@@ -22,11 +29,59 @@ export const getVersionById = async (versionId) => {
 }
 
 export const getNotesByAuthorId = async (authorId) => {
-    try{
-        const { data, error } = await supabase.from("notes").select().eq('author', authorId);
-        if (error) console.error(error);
+    try {
+        const author = "6cc87571-a147-400b-b663-89fc628f3931"; //임시 작성자
+        const { data, error } = await supabase
+            .from("notes")
+            .select()
+            .eq('author', author);
+        if (error) throw (error);
         return data
     } catch (error) {
         return null
+    }
+}
+
+export const createNewNote = async ({ articleTitle, content, authorId }) => {
+    //메인 버전을 insert하면 트리거 함수로 인해서 새로운 노트 역시 생성 됨
+    const author = "6cc87571-a147-400b-b663-89fc628f3931"; //임시 작성자
+    const { error } = await supabase
+        .from('versions')
+        .insert({ article_title: articleTitle, content, is_main: true, author });
+    if (error) {
+        throw error;
+    }
+}
+
+export const createNewVersion = async ({ articleTitle, content, noteId, authorId }) => {
+    const author = "6cc87571-a147-400b-b663-89fc628f3931"; //임시 작성자
+    const { error } = await supabase
+        .from('versions')
+        .insert({ article_title: articleTitle, content, is_main: false, author, note_id: noteId });
+    if (error) {
+        throw error;
+    }
+}
+
+export const deleteNote = async (noteId) => {
+    try {
+        await supabase
+            .from("notes")
+            .delete()
+            .eq('id', noteId);
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const deleteVersion = async (versionId) => {
+    try {
+        console.log('hello version');
+        await supabase
+            .from("versions")
+            .delete()
+            .eq('id', versionId);
+    } catch (error) {
+        throw error;
     }
 }

@@ -1,12 +1,16 @@
 import styled from "styled-components";
 import NoteItem from "../components/NoteItem";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getNoteVersions } from "../api/supabaseApi";
 
 
-const CreateNewVersion = () => {
-  return <button type="button">Create a new version</button>
+const CreateNewVersion = ({mainVersion}) => {
+  const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate(`/write/version`, { state:{ mainVersion }});
+  }
+  return <button type="button" onClick={handleNavigate}>Create a new version</button>
 }
 
 const NoteVersions = () => {
@@ -14,6 +18,7 @@ const NoteVersions = () => {
   const [mainVersion, setMainVersion] = useState(null);
   const [versions, setVersions] = useState([]);
 
+  //tanstack query를 적용해서 바꿔보자
   useEffect(() => {
     const fetchData = async () => {
       const main = await getNoteVersions(noteId, true);
@@ -29,15 +34,15 @@ const NoteVersions = () => {
   return (
     <StNoteVersions>
       <StMainVersionSection>
-        {mainVersion ? <NoteItem key={mainVersion.id} configData={mainVersion} redirectTo={'read-note'} /> : <div>로딩중</div> }
+        {mainVersion ? <NoteItem key={mainVersion.id} configData={mainVersion} mode={'version'} isRemovable={false} /> : <div>로딩중</div>}
       </StMainVersionSection>
-      <CreateNewVersion />
+      <CreateNewVersion mainVersion={mainVersion} />
       <StVersionsSection>
         {
           (versions.length > 0) ?
             versions.map((versionData) => {
               const { id } = versionData;
-              return <NoteItem key={id} configData={versionData} redirectTo={'read-note'}/>
+              return <NoteItem key={id} configData={versionData} mode={'version'} isRemovable={true} />
             })
             :
             <div>아직 새로운 버전이 없습니다</div>

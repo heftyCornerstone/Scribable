@@ -4,10 +4,10 @@ import styled from "styled-components";
 import { getVersionById } from "../api/supabaseApi";
 
 const ReadNoteContent = ({ noteContent }) => {
-  const { title, content } = noteContent;
+  const { article_title: articleTitle, content } = noteContent;
   return (
     <>
-      <NoteTitle>{title}</NoteTitle>
+      <NoteTitle>{articleTitle}</NoteTitle>
       <NoteContent>{content}</NoteContent>
     </>
   );
