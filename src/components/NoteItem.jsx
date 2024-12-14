@@ -1,29 +1,31 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { deleteNote, deleteVersion } from "../api/supabaseApi";
-
+import useDeleteVersion from "../hooks/useDeleteVersion";
+import useDeleteNote from "../hooks/useDeleteNote";
 
 const NoteItem = ({ configData, mode, isRemovable }) => {
     const navigate = useNavigate();
 
     const itemMode = {
-        note: { redirectTo: 'note-versions', deleteFn: deleteNote, btnValue: 'V' },
-        version: { redirectTo: 'read-note', deleteFn: deleteVersion, btnValue: 'R' }
+        note: { redirectTo: 'note-versions', btnValue: 'V' },
+        version: { redirectTo: 'read-note', btnValue: 'R' }
     }
-    const { redirectTo, deleteFn, btnValue } = itemMode[mode];
+    const { redirectTo, btnValue } = itemMode[mode];
     const { id, title } = configData;
+
+    const mutateSub = useDeleteVersion(id);
+    const mutateMain = useDeleteNote(id);
 
     const handleRead = () => {
         navigate(`/${redirectTo}/${id}`);
     }
     const handleDelete = async () => {
         try {
-            await deleteFn(id);
+            (mode === 'note') ? mutateMain() : mutateSub();
         } catch (error) {
             window.alert(error);
         }
     }
-
 
     return (
         <div >
@@ -38,6 +40,8 @@ const NoteItem = ({ configData, mode, isRemovable }) => {
     );
 };
 
+export default NoteItem
+
 const StNoteItem = styled.div`
   display: flex;
   align-items: center;
@@ -47,5 +51,3 @@ const StNoteItem = styled.div`
   border: 1px solid gray;
   cursor: pointer;
 `;
-
-export default NoteItem

@@ -6,7 +6,6 @@ const NavBar = () => {
     <nav>
       <Link to='/projects'>|projects| </Link>
       <Link to='/write/note'>|write note| </Link>
-      <Link to='/note-versions'>|note versions| </Link>
     </nav>
   )
 }

@@ -1,46 +1,29 @@
 import styled from "styled-components";
 import NoteItem from "../components/NoteItem";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getNoteVersions } from "../api/supabaseApi";
-
-
-const CreateNewVersion = ({mainVersion}) => {
-  const navigate = useNavigate();
-  const handleNavigate = () => {
-    navigate(`/write/version`, { state:{ mainVersion }});
-  }
-  return <button type="button" onClick={handleNavigate}>Create a new version</button>
-}
+import useGetVersions from "../hooks/useGetVersions";
 
 const NoteVersions = () => {
   const { noteId } = useParams();
-  const [mainVersion, setMainVersion] = useState(null);
-  const [versions, setVersions] = useState([]);
+  const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate('/write/version', { state: { mainVersion } });
+  }
+  const { mainVersion, subVersions, isVersionPending, isVersionError } = useGetVersions(noteId);
 
-  //tanstack query를 적용해서 바꿔보자
-  useEffect(() => {
-    const fetchData = async () => {
-      const main = await getNoteVersions(noteId, true);
-      const subVersions = await getNoteVersions(noteId);
-
-      setMainVersion(main[0]);
-      setVersions(subVersions);
-    };
-
-    fetchData();
-  }, []);
+  if (isVersionPending) return <div>Loading...</div>;
+  if (isVersionError) return <div>Error!</div>;
 
   return (
     <StNoteVersions>
       <StMainVersionSection>
-        {mainVersion ? <NoteItem key={mainVersion.id} configData={mainVersion} mode={'version'} isRemovable={false} /> : <div>로딩중</div>}
+        <NoteItem key={mainVersion[0].id} configData={mainVersion[0]} mode={'version'} isRemovable={false} />
       </StMainVersionSection>
-      <CreateNewVersion mainVersion={mainVersion} />
+      <button type="button" onClick={handleNavigate}>Create a new version</button>
       <StVersionsSection>
         {
-          (versions.length > 0) ?
-            versions.map((versionData) => {
+          (subVersions.length > 0) ?
+            subVersions.map((versionData) => {
               const { id } = versionData;
               return <NoteItem key={id} configData={versionData} mode={'version'} isRemovable={true} />
             })
@@ -51,6 +34,8 @@ const NoteVersions = () => {
     </StNoteVersions>
   );
 };
+
+export default NoteVersions;
 
 const StNoteVersions = styled.div`
   display: flex;
@@ -84,5 +69,3 @@ const StVersionsSection = styled(StSection)`
     display: none;
   }
 `;
-
-export default NoteVersions;

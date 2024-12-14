@@ -3,44 +3,58 @@ import { createNewNote } from "../api/supabaseApi";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { createNewVersion } from "../api/supabaseApi";
 import { useEffect, useState } from "react";
+import { updateVersion } from "../api/supabaseApi";
 
 const WriteNote = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { writeMode } = useParams();
-  const location = useLocation();
   const [mainVer, setMainVer] = useState(null);
-  const [noteTitle, setNoteTitle] = useState('');
-  const [noteContent, setNoteContent] = useState('');
-
-  const mode = {
-    note: { createFn: createNewNote },
-    version: { createFn: createNewVersion },
-  };
-  const { createFn } = mode[writeMode];
+  const [noteTitle, setNoteTitle] = useState("");
+  const [noteContent, setNoteContent] = useState("");
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const articleTitle = formData.get("title");
-    const content = formData.get("content");
-    const createFnParam =
-      writeMode === "version" //장황한 if문을 줄일 방법을 찾자
-        ? { articleTitle, content, noteId: mainVer.note_id }
-        : { articleTitle, content };
-    await createFn(createFnParam); //authorId 추가하기
-    navigate("/projects");
+
+    const mode = {
+      note: {
+        writeFn: createNewNote,
+        writeFnParam: {},
+      },
+      version: {
+        writeFn: createNewVersion,
+        writeFnParam: { noteId: mainVer?.note_id },
+      },
+      update: {
+        writeFn: updateVersion,
+        writeFnParam: { versionId: mainVer?.id },
+      },
+    };
+    const { writeFn, writeFnParam } = mode[writeMode];
+
+    await writeFn({
+      ...writeFnParam,
+      articleTitle: noteTitle,
+      content: noteContent,
+    }); //authorId 추가하기
+    const navigateTo =
+      writeMode === "note"
+        ? "/projects"
+        : `/note-versions/${mainVer.note_id}`;
+    navigate(navigateTo);
   };
+
   // react hook form을 적용해서 비제어 컴포넌트의 렌더링을 최적화 할 시간이 있을까?
-  const onTitleChange = (e)=>{
+  const onTitleChange = (e) => {
     setNoteTitle(e.target.value);
-  }
-  const onContentChange = (e)=>{
+  };
+  const onContentChange = (e) => {
     setNoteContent(e.target.value);
-  }
+  };
 
   useEffect(() => {
-    if (writeMode === "version") {
-      const main = location.state.mainVersion;
+    if (writeMode !== "note") {
+      const main = (writeMode==='version') ? location.state.mainVersion[0] : location.state.mainVersion;
       setMainVer(main);
       setNoteTitle(main.article_title);
       setNoteContent(main.content);
@@ -66,11 +80,13 @@ const WriteNote = () => {
           onChange={onContentChange}
           required
         ></NoteContentTextarea>
-        <SubmitBtn>작성 완료</SubmitBtn>
+        <SubmitBtn>완료</SubmitBtn>
       </NoteContentsBox>
     </NoteSheet>
   );
 };
+
+export default WriteNote;
 
 const NoteSheet = styled.div`
   width: 70%;
@@ -102,5 +118,3 @@ const NoteContentTextarea = styled.textarea`
 const SubmitBtn = styled.button`
   width: 150px;
 `;
-
-export default WriteNote;

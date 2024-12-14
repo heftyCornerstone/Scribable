@@ -1,44 +1,25 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { getVersionById } from "../api/supabaseApi";
-
-const ReadNoteContent = ({ noteContent }) => {
-  const navigate = useNavigate();
-  const { article_title: articleTitle, content, id } = noteContent;
-  const handleUpdate = ()=>{
-    navigate(`/update-note/${id}`, { state: noteContent });
-  }
-  return (
-    <>
-      <NoteTitle>{articleTitle}</NoteTitle>
-      <NoteContent>{content}</NoteContent>
-      <button onClick={handleUpdate}>수정하기</button>
-    </>
-  );
-};
+import useGetVersionById from "../hooks/useGetVersionById";
+import ReadNoteContent from "../components/readNote/ReadNoteContent";
 
 const ReadNote = () => {
   const { versionId } = useParams();
-  const [note, setNote] = useState(null);
+  const { note, isPending, isError } = useGetVersionById(versionId);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getVersionById(versionId)
-      setNote(data);
-    };
-
-    fetchData();
-  }, []);
+  if (isPending) return <div>Loading...</div>;
+  if (isError) return <div>Error!</div>;
 
   return (
     <StNoteSheet>
       <NoteContentsBox>
-        {note ? <ReadNoteContent noteContent={note} /> : <div>로딩중</div>}
+        <ReadNoteContent noteContent={note} />
       </NoteContentsBox>
     </StNoteSheet>
   );
 };
+
+export default ReadNote;
 
 const StNoteSheet = styled.div`
   width: 70%;
@@ -53,15 +34,5 @@ const NoteContentsBox = styled.div`
   gap: 30px;
   margin: 40px 60px;
 `;
-const NoteTitle = styled.h3`
-  width: 100%;
-  font-size: 45px;
-  font-weight: bold;
-  text-align: center;
-`;
-const NoteContent = styled.div`
-  width: 100%;
-  height: 60vh;
-`;
 
-export default ReadNote;
+
