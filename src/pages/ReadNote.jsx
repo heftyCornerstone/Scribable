@@ -23,8 +23,9 @@ export default ReadNote;
 
 const StNoteSheet = styled.div`
   width: 70%;
-  min-height: 85vh;
-  border: 1px solid gray;
+  min-height: 95vh;
+  border: 2px solid #354f4d;
+  border-radius: 10px;
   background-color: white;
 `;
 const NoteContentsBox = styled.div`

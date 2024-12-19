@@ -47,7 +47,7 @@ export const createNewNote = async ({ articleTitle, content, authorId }) => {
     const author = "6cc87571-a147-400b-b663-89fc628f3931"; //임시 작성자
     const { error } = await supabase
         .from('versions')
-        .insert({ article_title: articleTitle, content, is_main: true, author });
+        .insert({ title:'Main version', article_title: articleTitle, content, is_main: true, author });
     if (error) {
         throw error;
     }

@@ -19,7 +19,7 @@ const NoteVersions = () => {
       <StMainVersionSection>
         <NoteItem key={mainVersion[0].id} configData={mainVersion[0]} mode={'version'} isRemovable={false} />
       </StMainVersionSection>
-      <button type="button" onClick={handleNavigate}>Create a new version</button>
+      <StCreateVersionBtn type="button" onClick={handleNavigate}>Create a new version</StCreateVersionBtn>
       <StVersionsSection>
         {
           (subVersions.length > 0) ?
@@ -28,7 +28,7 @@ const NoteVersions = () => {
               return <NoteItem key={id} configData={versionData} mode={'version'} isRemovable={true} />
             })
             :
-            <div>아직 새로운 버전이 없습니다</div>
+            <div>No sub-version yet, what about scribble a new?</div>
         }
       </StVersionsSection>
     </StNoteVersions>
@@ -37,11 +37,22 @@ const NoteVersions = () => {
 
 export default NoteVersions;
 
+
+const StCreateVersionBtn = styled.button`
+    padding: 0.5em 0.6em;
+    font-weight: bold;
+    color: white;
+    border: none;
+    outline: none;
+    background-color: #354f4d;
+    &:hover{
+      background-color: #698582;
+    }
+`;
 const StNoteVersions = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
   width: 100%;
   height: 90vh;
   gap: 30px;
@@ -55,7 +66,7 @@ const StSection = styled.section`
 const StMainVersionSection = styled(StSection)`
   justify-content: center;
   height: 120px;
-  border-bottom: 1px solid gray;
+  border-bottom: 2px solid #213547;
 `;
 const StVersionsSection = styled(StSection)`
   height: 60%;

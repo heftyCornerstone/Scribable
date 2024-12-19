@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import NavBar from "./NavBar";
 import styled from "styled-components";
 import SideBar from "./SideBar";
 
@@ -11,7 +10,7 @@ const Layout = () => {
         <SideBar />
       </StSideBarAside>
       <StMainSection>
-        <NavBar />
+        {/* <NavBar /> */}
         <StMain>
           <Outlet />
         </StMain>
@@ -22,18 +21,21 @@ const Layout = () => {
 
 const StLayoutDiv = styled.div`
   display: flex;
+  margin: 1vh;
+  max-height: 99vh;
 `;
 const StSideBarAside = styled.aside`
   width: 15%;
   min-width: 200px;
-  height: 100vh;
-  border-right: 1px solid gray;
+  height: 98vh;
+  border-radius: 10px;
+  background-color: #6c827f;
 `;
 const StMainSection = styled.section`
   display: flex;
   flex-direction: column;
   width: 85%;
-  height: 100vh;
+  height: 98vh;
   gap: 30px;
 `;
 const StMain = styled.main`

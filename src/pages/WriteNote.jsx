@@ -54,7 +54,7 @@ const WriteNote = () => {
 
   useEffect(() => {
     if (writeMode !== "note") {
-      const main = (writeMode==='version') ? location.state.mainVersion[0] : location.state.mainVersion;
+      const main = (writeMode === 'version') ? location.state.mainVersion[0] : location.state.mainVersion;
       setMainVer(main);
       setNoteTitle(main.article_title);
       setNoteContent(main.content);
@@ -80,7 +80,7 @@ const WriteNote = () => {
           onChange={onContentChange}
           required
         ></NoteContentTextarea>
-        <SubmitBtn>완료</SubmitBtn>
+        <SubmitBtn>Done</SubmitBtn>
       </NoteContentsBox>
     </NoteSheet>
   );
@@ -90,8 +90,9 @@ export default WriteNote;
 
 const NoteSheet = styled.div`
   width: 70%;
-  min-height: 85vh;
-  border: 1px solid gray;
+  min-height: 95vh;
+  border: 2px solid #354f4d;
+  border-radius: 10px;
   background-color: white;
 `;
 const NoteContentsBox = styled.form`
@@ -108,13 +109,26 @@ const NoteTitleInput = styled.input`
   font-weight: bold;
   text-align: center;
   outline: none;
+  border : none;
+  border-bottom: 2px solid #354f4d;
 `;
 const NoteContentTextarea = styled.textarea`
   width: 100%;
-  height: 60vh;
+  height: 65vh;
   resize: none;
   outline: none;
+  border: 1px dashed #354f4d;
+  border-radius: 5px;
 `;
 const SubmitBtn = styled.button`
-  width: 150px;
+  width: 5rem;
+  padding: 0.5em 0.6em;
+  font-weight: bold;
+  color: white;
+  border: none;
+  outline: none;
+  background-color: #354f4d;
+  &:hover{
+    background-color: #698582;
+  }
 `;

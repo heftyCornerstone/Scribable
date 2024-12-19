@@ -1,21 +1,19 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 
 
 const Home = () => {
-    const navigate = useNavigate();
-    const onClickStart = ()=>{
-        navigate('/projects')
-    }
-    return (
-      <StHomeMain>
-        <StHomeTitle>Scribable</StHomeTitle>
-        <StStartBtn type="button" onClick={onClickStart}>
+  return (
+    <StHomeMain>
+      <StHomeTitle>Scribable</StHomeTitle>
+      <Link to="/projects">
+        <StStartBtn type="button">
           start
         </StStartBtn>
-      </StHomeMain>
-    );
+      </Link>
+    </StHomeMain>
+  );
 }
 
 const StHomeMain = styled.main`
@@ -31,8 +29,15 @@ const StHomeTitle = styled.h1`
     font-size: 80px;
 `;
 const StStartBtn = styled.button`
+    padding: 0.6em 1.2em;
     font-weight: bold;
-    background-color: gray;
+    color: white;
+    background-color: #354f4d;
+    border: none;
+    outline: none;
+    &:hover{
+      background-color: #567371;
+    }
 `;
 
 export default Home;
